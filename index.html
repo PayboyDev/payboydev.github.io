@@ -72,17 +72,6 @@
   </head>
 
   <body>
-    <div id="auth-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">Verification Required</div>
-        <div class="modal-message">You have registered with Gutsy before.</div>
-        <div class="modal-buttons">
-          <button id="verify-btn" onclick="handleVerifyClick()">Verify that is me</button>
-          <button id="not-me-btn" onclick="handleNotMeClick()">Not me</button>
-        </div>
-      </div>
-    </div>
-    <div id="faceio-modal"></div>
     <script src="https://cdn.faceio.net/fio.js"></script>
     <script type="text/javascript">
       // Instantiate fio.js with your application's Public ID
@@ -143,20 +132,6 @@
           });
       }
 
-      function showModal() {
-        document.getElementById('auth-modal').style.display = 'flex';
-      }
-
-      function handleNotMeClick() {
-        //it will go back to screen
-        sendMessageToRN(false, null, null);
-      }
-
-      function handleVerifyClick() {
-        document.getElementById('auth-modal').style.display = 'none';
-        auth();
-      }
-
       function sendMessageToRN(success, data, message) {
         const sendData = {
           success,
@@ -201,15 +176,11 @@
             );
             break;
           case fioErrCode.FACE_DUPLICATION:
-            setTimeout(() => {
-              showModal();
-            }, 2000);
-            // sendMessageToRN(
-            //   false,
-            //   'Auth',
-            //   // 'User enrolled previously (facial features already recorded). Cannot enroll again!',
-            // );
-            break;
+             sendMessageToRN(
+              false,
+              'FACE_DUPLICATION'
+              // 'User enrolled previously (facial features already recorded). Cannot enroll again!',
+            );
           case fioErrCode.MINORS_NOT_ALLOWED:
             sendMessageToRN(
               false,
