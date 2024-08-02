@@ -1,88 +1,9 @@
 <html>
   <head>
     <title>Face Setup</title>
-    <style>
-      /* Modal styles */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-        align-items: center;
-        justify-content: center;
-      }
-
-      .modal-content {
-        background-color: #fff;
-        padding: 34px;
-        border: 1px solid #888;
-        width: 85%; /* 85% of screen width */
-        border-radius: 20px;
-        margin: 5% auto; /* 5% of screen width from top and bottom, center horizontally */
-      }
-
-      .modal-header {
-        font-size: 30px;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-align: start;
-      }
-
-      .modal-message {
-        font-size: 26px;
-        margin-bottom: 20px;
-        text-align: start;
-      }
-
-      .modal-buttons {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .modal-buttons button {
-        background-color: #9b5ffa;
-        color: white;
-        padding: 20px;
-        margin: 10px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        border-radius: 10px;
-        font-size: 28px;
-        font-weight: 500; /* Medium bold */
-        padding: 30px;
-      }
-
-      .modal-buttons button:not(:first-child) {
-        background-color: #fff;
-        border: 2px solid #d0d5dd;
-        color: #344054;
-        margin-top: 22px;
-      }
-
-      .modal-buttons button:hover {
-        opacity: 0.8;
-      }
-    </style>
   </head>
 
   <body>
-    <div id="auth-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">Verification Required</div>
-        <div class="modal-message">You have registered with Gutsy before.</div>
-        <div class="modal-buttons">
-          <button id="verify-btn" onclick="handleVerifyClick()">Verify that is me</button>
-          <button id="not-me-btn" onclick="handleNotMeClick()">Not me</button>
-        </div>
-      </div>
-    </div>
-    <div id="faceio-modal"></div>
     <script src="https://cdn.faceio.net/fio.js"></script>
     <script type="text/javascript">
       // Instantiate fio.js with your application's Public ID
@@ -143,20 +64,6 @@
           });
       }
 
-      function showModal() {
-        document.getElementById('auth-modal').style.display = 'flex';
-      }
-
-      function handleNotMeClick() {
-        //it will go back to screen
-        sendMessageToRN(false, null, null);
-      }
-
-      function handleVerifyClick() {
-        document.getElementById('auth-modal').style.display = 'none';
-        auth();
-      }
-
       function sendMessageToRN(success, data, message) {
         const sendData = {
           success,
@@ -201,15 +108,11 @@
             );
             break;
           case fioErrCode.FACE_DUPLICATION:
-            setTimeout(() => {
-              showModal();
-            }, 2000);
-            // sendMessageToRN(
-            //   false,
-            //   'Auth',
-            //   // 'User enrolled previously (facial features already recorded). Cannot enroll again!',
-            // );
-            break;
+             sendMessageToRN(
+              false,
+              'FACE_DUPLICATION'
+              // 'User enrolled previously (facial features already recorded). Cannot enroll again!',
+            );
           case fioErrCode.MINORS_NOT_ALLOWED:
             sendMessageToRN(
               false,
